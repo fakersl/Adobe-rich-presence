@@ -3,7 +3,7 @@ import { buildPresence } from '@shared/presence'
 import type { DetectedApp, RpcStatus } from '@shared/types'
 import { detect } from './detector'
 import { connectedKeys, getExt } from './bridge'
-import { getSettings } from './store'
+import { getSettings, DISCORD_CLIENT_ID } from './store'
 
 const DETECT_MS = 5000
 const RECONNECT_MS = 10000
@@ -82,8 +82,9 @@ async function destroyClient(): Promise<void> {
 
 async function connect(): Promise<void> {
   const s = getSettings()
-  const id = s.clientId.trim()
-  if (!s.enabled || !id || connected || connecting) return
+  // The Client ID is FIXED — always the hardcoded constant, never from settings
+  const id = DISCORD_CLIENT_ID
+  if (!s.enabled || connected || connecting) return
   connecting = true
   activeClientId = id
   const c = new Client({ clientId: id })
@@ -108,7 +109,7 @@ async function connect(): Promise<void> {
     }
   } catch {
     if (client === c) {
-      lastError = 'Discord fechado ou Client ID inválido'
+      lastError = 'Discord closed or invalid Client ID'
       await destroyClient()
     }
     emit()
@@ -148,7 +149,7 @@ async function pushActivity(): Promise<void> {
     lastPayload = key
     lastSentAt = Date.now()
   } catch {
-    lastError = 'Falha ao atualizar a presença'
+    lastError = 'Failed to update presence'
     await destroyClient()
     emit()
   }
@@ -186,7 +187,8 @@ export function onBridgeUpdate(): void {
 
 export async function refresh(): Promise<void> {
   const s = getSettings()
-  if (client && (!s.enabled || activeClientId !== s.clientId.trim())) {
+  // Also reconnect if the active client id differs from the fixed constant
+  if (client && (!s.enabled || activeClientId !== DISCORD_CLIENT_ID)) {
     await destroyClient()
   }
   emit()

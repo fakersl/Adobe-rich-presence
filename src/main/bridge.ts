@@ -50,7 +50,8 @@ function json(res: http.ServerResponse, code: number, data: unknown): void {
   res.writeHead(code, { 'Content-Type': 'application/json' }).end(JSON.stringify(data))
 }
 
-// Public settings that the Adobe panel is allowed to READ
+// Public settings that the Adobe panel is allowed to READ.
+// NOTE: clientId is intentionally NOT exposed — it is fixed in code.
 function publicSettings() {
   const s = getSettings()
   return {
@@ -65,7 +66,8 @@ function publicSettings() {
   }
 }
 
-// Public settings that the Adobe panel is allowed to WRITE (whitelist)
+// Public settings that the Adobe panel is allowed to WRITE.
+// NOTE: clientId is intentionally NOT writable — it is fixed in code.
 const WRITABLE = new Set([
   'enabled',
   'privateMode',
@@ -76,11 +78,6 @@ const WRITABLE = new Set([
   'hideExtension'
 ])
 
-/**
- * Starts the local HTTP server.
- * @param onChange called when snapshots or config change
- * @param onInstall called when the panel requests extension reinstall
- */
 export function startBridge(
   onChange: () => void,
   onInstall: () => Promise<unknown>
