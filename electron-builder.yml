@@ -1,0 +1,28 @@
+appId: com.fakersl.adobe-rpc
+productName: Adobe RPC
+directories:
+  buildResources: resources
+  output: dist
+files:
+  - out/**/*
+  - package.json
+extraResources:
+  - from: resources/icon.ico
+    to: icon.ico
+  - from: resources/extension
+    to: extension
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: resources/icon.ico
+  requestedExecutionLevel: asInvoker
+nsis:
+  oneClick: true          
+  perMachine: false       
+  allowToChangeInstallationDirectory: false
+  createDesktopShortcut: false
+  createStartMenuShortcut: false
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false
+  artifactName: ${productName}-Setup-${version}.${ext}

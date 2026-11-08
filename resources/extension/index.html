@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Adobe RPC</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      background: #18181b;
+      color: #e4e4e7;
+      font: 12px 'Segoe UI', sans-serif;
+    }
+
+    body {
+      padding: 10px 12px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      flex: none;
+    }
+
+    .dot.ok {
+      background: #34d399;
+    }
+
+    .dot.warn {
+      background: #f59e0b;
+    }
+
+    .sep {
+      height: 1px;
+      background: #27272a;
+      margin: 10px 0;
+    }
+
+    .line {
+      color: #a1a1aa;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .line b {
+      color: #e4e4e7;
+      font-weight: 500;
+    }
+
+    .ctrl {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+
+    .ctrl label {
+      color: #a1a1aa;
+    }
+
+    .switch {
+      position: relative;
+      width: 34px;
+      height: 18px;
+      background: #3f3f46;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: background .15s;
+      flex: none;
+    }
+
+    .switch.on {
+      background: #34d399;
+    }
+
+    .switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform .15s;
+    }
+
+    .switch.on::after {
+      transform: translateX(16px);
+    }
+
+    select {
+      background: #27272a;
+      color: #e4e4e7;
+      border: 1px solid #3f3f46;
+      border-radius: 4px;
+      padding: 3px 6px;
+      font-size: 11px;
+    }
+
+    button {
+      background: #27272a;
+      color: #e4e4e7;
+      border: 1px solid #3f3f46;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    button:hover {
+      background: #3f3f46;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="row"><span id="dot" class="dot"></span><span id="status">Iniciando...</span></div>
+  <div class="sep"></div>
+  <div class="line">Projeto: <b id="project">—</b></div>
+  <div class="line">Ação: <b id="activity">—</b></div>
+  <div class="sep"></div>
+
+  <div id="panelControls" class="hidden">
+    <div class="ctrl">
+      <label>Rich Presence</label>
+      <div class="switch" id="swEnabled" data-key="enabled"></div>
+    </div>
+    <div class="ctrl">
+      <label>Modo privado</label>
+      <div class="switch" id="swPrivate" data-key="privateMode"></div>
+    </div>
+    <div class="ctrl">
+      <label>Timer</label>
+      <select id="selTimer">
+        <option value="app">Por app</option>
+        <option value="project">Por projeto</option>
+        <option value="off">Oculto</option>
+      </select>
+    </div>
+    <div class="ctrl">
+      <label>Título</label>
+      <select id="selTitle">
+        <option value="project">Nome do projeto</option>
+        <option value="app">Só o app</option>
+      </select>
+    </div>
+    <div class="ctrl">
+      <label>Atividade</label>
+      <select id="selActivity">
+        <option value="dynamic">Dinâmica</option>
+        <option value="none">Nenhuma</option>
+      </select>
+    </div>
+    <button id="btnReinstall">Reinstalar nos apps Adobe</button>
+  </div>
+
+  <div id="panelDown" class="hidden" style="margin-top:10px;color:#f59e0b;">
+    Adobe RPC está fechado. Reabra o instalador ou clique no ícone da bandeja.
+  </div>
+
+  <script src="js/panel.js"></script>
+</body>
+
+</html>
