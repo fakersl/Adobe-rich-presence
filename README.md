@@ -1,22 +1,24 @@
-```markdown
 # Adobe RPC
 
-Shows in Discord which Adobe app you're using (Rich Presence).
+Displays the Adobe application you're currently using as your Discord Rich Presence.
 
 ## 1. Download & Install
 
-Grab the latest installer from **[Releases](https://github.com/fakersl/Adobe-rich-presence/releases/latest)**.
+Download the latest installer from Releases:
+https://github.com/fakersl/Adobe-rich-presence/releases/latest
 
-1. Run `Adobe RPC-Setup-x.x.x.exe` — installs silently, no UAC, no wizard
-2. Restart your Adobe app (Photoshop, Illustrator, Premiere, After Effects, InDesign)
-3. Open **Window → Extensions → Adobe RPC** (Photoshop: *Extensions (Legacy)*)
-4. Leave the panel open
+1. Run `Adobe RPC-Setup-x.x.x.exe` — installs silently, with no UAC prompt or setup wizard.
+2. Restart your Adobe application (Photoshop, Illustrator, Premiere Pro, After Effects, or InDesign).
+3. Open Window → Extensions → Adobe RPC (Photoshop: Extensions (Legacy)).
+4. Keep the panel open.
 
-The app runs **invisible** in the background (a small 16×16 tray icon only) and auto-installs the CEP extension into all 5 Adobe apps on first launch. The Discord Client ID is **hardcoded** — no setup needed.
+The application runs silently in the background, with only a small 16×16 tray icon visible. On first launch, it automatically installs the CEP extension into all 5 supported Adobe applications.
+
+The Discord Client ID is hardcoded — no additional configuration required.
 
 ## What the panel does
 
-All RPC controls live **inside the Adobe panel**:
+All Rich Presence settings are managed directly inside the Adobe panel:
 
 | Control | Options |
 |---------|---------|
@@ -26,61 +28,56 @@ All RPC controls live **inside the Adobe panel**:
 | Title | Project name / App only |
 | Activity | Dynamic / Fixed text / None |
 
-Changes take effect within ~2s — no app restart needed.
+Changes take effect within approximately 2 seconds — no application restart required.
 
 ## Supported apps
 
-| App | What's shown |
-|-----|--------------|
+| App | What's displayed |
+|-----|------------------|
 | Photoshop | Document, active layer, tool |
 | Illustrator | Artboard, selected objects |
-| Premiere | Project, sequence |
-| After Effects | Project, comp, layer count |
+| Premiere Pro | Project, sequence |
+| After Effects | Project, composition, layer count |
 | InDesign | Document, page |
 | Lightroom / Acrobat | Window title only |
 
 ## Requirements
 
-- Windows 10/11 x64
-- Adobe CC 2018+ (CEP 9)
-- Discord **desktop** app open
+- Windows 10/11 (x64)
+- Adobe Creative Cloud 2018+ (CEP 9)
+- Discord desktop application running
 
 ## Notes
 
-- Discord rate-limits presence updates to 1 per 15s
-- The panel must stay open — if closed, the app falls back to the window title
-- CEP is being deprecated by Adobe; recent versions may require a UXP port
+- Discord rate-limits Rich Presence updates to one update every 15 seconds.
+- The Adobe panel must remain open. If closed, the application falls back to window title detection.
+- Adobe is deprecating CEP. Recent versions may eventually require a migration to UXP.
 
 ## Build from source
 
-```bash
-npm install
-npm run dev        # development
-npm run build:win  # NSIS installer in dist/
-npm run typecheck
-```
+    npm install
+    npm run dev        # Development
+    npm run build:win  # Generates the NSIS installer in dist/
+    npm run typecheck
 
 ## How it works
 
-```
-┌─────────────────┐        HTTP 127.0.0.1:47321        ┌──────────────┐
-│  Adobe app      │  ──── snapshot (project/action) ───▶ │  Electron    │
-│  (CEP panel)    │                                     │  (invisible) │
-└─────────────────┘                                     └──────┬───────┘
-                                                               │ IPC
-                                                               ▼
-                                                        ┌──────────────┐
-                                                        │   Discord    │
-                                                        └──────────────┘
-```
+    ┌─────────────────┐        HTTP 127.0.0.1:47321        ┌──────────────┐
+    │  Adobe app      │  ──── snapshot (project/action) ───▶ │  Electron    │
+    │  (CEP panel)    │                                     │  (invisible) │
+    └─────────────────┘                                     └──────┬───────┘
+                                                                   │ IPC
+                                                                   ▼
+                                                            ┌──────────────┐
+                                                            │   Discord    │
+                                                            └──────────────┘
 
-- The CEP extension reads the active document/layer/tool via ExtendScript
-- It sends a JSON snapshot to `127.0.0.1:47321/ext` with a local token
-- The Electron app pushes the presence to Discord via IPC
-- The panel can also read/write config via `/config` (token-protected)
-- Without the extension, the app falls back to detecting the window title
+- The CEP extension reads the active document, layer, and tool using ExtendScript.
+- It sends a JSON snapshot to 127.0.0.1:47321/ext using a local authentication token.
+- The Electron application updates Discord Rich Presence through IPC.
+- The panel can also read and write configuration through the token-protected /config endpoint.
+- If the extension is unavailable, the application falls back to detecting the active window title.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
-```
+MIT — see LICENSE.
